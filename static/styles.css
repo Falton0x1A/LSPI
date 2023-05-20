@@ -1,0 +1,113 @@
+        .container {
+            display: flex;
+            flex-direction: row;
+        }
+         .left-side {
+            width: 50%;
+        }
+
+	.right-side {
+	    display: flex;
+	    flex-direction: column;
+	}
+	h1 {
+	  display: block;
+	  text-align: center;
+	  font-weight: bold;
+	}
+        
+        .interpreter {
+            flex: 1;
+            padding: 16px;
+        }
+        
+        .builder {
+ 	    padding: 16px;
+	}
+        
+	.command-button {
+	    display: flex;
+	    align-items: center;
+	    justify-content: center;
+	    cursor: pointer;
+	    padding: 1% 1%;
+	    background-color: #f0f0f0;
+	    border: 1px solid #ccc;
+	    border-radius: 8px;
+	}
+        
+        .output-field {
+            width: 100%;
+            justify-content: center;
+            height: 20px;
+            margin-top: 16px;
+            resize: none;
+            text-align: center;
+            font-size: x-large;
+        }
+        
+	.button-container {
+	    margin-top: 16px;
+	    display: grid;
+	    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	    gap: 8px;
+	}
+
+	.button-container button {
+	    width: 100%;
+	}
+	
+	#button-container {
+	    display: grid;
+	    grid-template-columns: repeat(3, 1fr);
+	    gap: 8px;
+	}
+
+	#button-container > div {
+	    width: 50%;
+	    padding: 8px;
+	    box-sizing: border-box;
+	}
+
+        .collapse {
+            display: none;
+        }
+        
+        .collapsible-trigger {
+            cursor: pointer;
+        }
+        .command-details{
+        	display: block;
+        }
+        .command-details.collapsed {
+    	    display: none;
+	}
+	.collapsible-content {
+	    display: none;
+	}
+
+	.collapsible-content.expanded {
+	    display: block;
+	}
+	.options-container {
+	  margin-top: 16px;
+	}
+
+	.options {
+	  display: block;
+	}
+
+	.options.show {
+	  display: inline-grid;
+	  align-self: center;
+	  margin-top: 12px;
+	  gap: 8px;
+	}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+}
+

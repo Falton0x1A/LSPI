@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Command Interpretation</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="left-side">
+            <h1>Command Interpretation</h1>
+                        <form method="POST" action="{{ url_for('interpret') }}" style="padding-left: 25%;">
+                <input type="text" name="command" placeholder="Enter a command" required style="font-size: large;">
+                <input type="submit" value="Submit">
+            </form>
+    
+            {% if error_message %}
+                <p class="error-message">{{ error_message }}</p>
+            {% endif %}
+            
+            {% if command %}
+                <h3>Command: {{ command }}</h3>
+                {% if man_page %}
+                    {% for heading, content in man_page.items() %}
+                        <h4>
+                            <button class="toggle-button" onclick="toggleCommandDetails('{{ heading }}')">{{ heading }}</button>
+                        </h4>
+                        <div id="{{ heading }}" class="command-details collapsed">
+                            <pre>{{ content }}</pre>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endif %}
+            </div>
+        <div class="right-side">
+            <h1>Command Builder</h1>
+            <div id="button-container">
+<button class="command-button" onclick="showOptions('sudo-options')">Admin Escalation</button>
+<button class="command-button" onclick="showOptions('chroot-options')">Input command as Root</button>
+<button class="command-button" onclick="showOptions('chmod-options')">Set file permissions</button>
+<button class="command-button" onclick="showOptions('visduo-options')">Edit the admins file</button>
+<button class="command-button" onclick="showOptions('last-options')">Show who last logged in</button>
+<button class="command-button" onclick="showOptions('file-options')">Show file details</button>
+<button class="command-button" onclick="showOptions('ip-options')">Edit networking options</button>
+<button class="command-button" onclick="showOptions('kill-options')">Send signals to a process</button>
+<button class="command-button" onclick="showOptions('setfacl-options')">Set file access controls</button>
+<button class="command-button" onclick="showOptions('getfacl-options')">Get file access controls</button>
+<button class="command-button" onclick="showOptions('ss-options')">Show Socket details</button>
+<button class="command-button" onclick="showOptions('lsof-options')">Show a list of open files</button>
+</div>
+<!--Start Options Buttons-->
+<div id="sudo-options" class="options">
+  <button onclick="appendCommand('sudo -u username')">Run command as a different user</button>
+  <button onclick="appendCommand('sudo -i')">Start a new shell as the target user</button>
+</div>
+<div id="chroot-options" class="options">
+  <button onclick="appendCommand('chroot /path/to/new/root')">Change the root directory for the current process</button>
+</div>
+<div id="chmod-options" class="options">
+  <button onclick="appendCommand('chmod +x filename')">Add execute permission to a file</button>
+  <button onclick="appendCommand('chmod -R 700 directory')">Recursively set permissions for a directory</button> <!--using 700 for safety-->
+</div>
+<div id="visduo-options" class="options">
+  <button onclick="appendCommand('visduo')">Example option for visduo command</button>
+</div>
+<div id="last-options" class="options">
+  <button onclick="appendCommand('last -n 5')">Display last 5 logins</button>
+</div>
+<div id="file-options" class="options">
+  <button onclick="appendCommand('file filename')">Get file type information</button>
+</div>
+<div id="ip-options" class="options">
+  <button onclick="appendCommand('ip addr show')">Show IP addresses</button>
+</div>
+<div id="kill-options" class="options">
+  <button onclick="appendCommand('kill -9 process_id')">Forcefully terminate a process</button>
+</div>
+<div id="setfacl-options" class="options">
+  <button onclick="appendCommand('setfacl -m u:username:rw file')">Set ACL for a user on a file</button>
+</div>
+<div id="getfacl-options" class="options">
+  <button onclick="appendCommand('getfacl filename')">Get ACL information for a file</button>
+</div>
+<div id="ss-options" class="options">
+  <button onclick="appendCommand('ss -tunlp')">Show TCP, UDP, and listening ports</button>
+</div>
+<div id="lsof-options" class="options">
+  <button onclick="appendCommand('lsof -i :port_number')">List processes using a specific port</button>
+</div>
+<!--End Options Buttons-->
+            <textarea id="output" class="output-field" readonly></textarea>
+            <div class="button-container">
+                <button onclick="resetOutput()">Reset</button>
+                <button onclick="undo()">Undo</button>
+            </div>
+            <script>
+                const outputField = document.getElementById('output');
+                const buttonContainer = document.getElementById('button-container');
+                const commandHistory = [];
+                
+                function appendCommand(command) {
+                    commandHistory.push(command);
+                    outputField.value += command + ' ';
+                }
+                
+                function resetOutput() {
+                    outputField.value = '';
+                    commandHistory.length = 0;
+                    showOptions();
+                }
+                function undo() {
+                    if (commandHistory.length > 0) {
+                        commandHistory.pop();
+                        outputField.value = commandHistory.join(' ') + ' ';
+                    }
+                }
+                function toggleCommandDetails(heading) {
+		  const detailsElement = document.getElementById(heading);
+		  detailsElement.classList.toggle('collapsed');
+		}
+		function showOptions(optionId) {
+		  const optionsElements = document.getElementsByClassName('options');
+		  for (let i = 0; i < optionsElements.length; i++) {
+		    optionsElements[i].classList.remove('show');
+		  }
+		  const selectedOptionElement = document.getElementById(optionId);
+		  selectedOptionElement.classList.add('show');
+		}
+            </script>
+        </div>
+    </div>
+</body>
+</html>
+
