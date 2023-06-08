@@ -19,6 +19,21 @@ allowed_commands = {
     'ss': r'^ss(\s+-\w+)*$',
     'lsof': r'^lsof(\s+-\w+)*$',
 }
+allowed_params = {
+    'chmod': r'^\s*-\w+$',
+    'sudo': r'^\s*-\w+$',
+    'visudo': r'^$',
+    'chroot': r'^\s*-\w+$',
+    'last': r'^\s*-\w+$',
+    'file': r'^\s*-\w+$',
+    'ip': r'^\s*-\w+$',
+    'kill': r'^\s*-\w+$',
+    'setfacl': r'^\s*-\w+$',
+    'getfacl': r'^\s*-\w+$',
+    'ss': r'^\s*-\w+$',
+    'lsof': r'^\s*-\w+$',
+}
+
 #-------------------------------------------------------------------------------------------------------------------
 @app.route('/')
 def index():
@@ -63,6 +78,11 @@ def execute_command():
     command = request.form['command']
     parameter = request.form['parameter']
     print(f"Command received: {command} {parameter}")  # Debugging purposes
+    
+    # Validate the command against the allowed_commands patterns
+    if command not in allowed_commands or not re.match(allowed_commands[command], command):
+        error_message = f"Invalid command or parameters: {command}"
+        return render_template('index.html', error_message=error_message)
 
     try:
         command_with_parameter = f"man {command} | grep .{parameter},"
