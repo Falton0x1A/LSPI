@@ -19,21 +19,6 @@ allowed_commands = {
     'ss': r'^ss(\s+-\w+)*$',
     'lsof': r'^lsof(\s+-\w+)*$',
 }
-allowed_params = {
-    'chmod': r'^\s*-\w+$',
-    'sudo': r'^\s*-\w+$',
-    'visudo': r'^$',
-    'chroot': r'^\s*-\w+$',
-    'last': r'^\s*-\w+$',
-    'file': r'^\s*-\w+$',
-    'ip': r'^\s*-\w+$',
-    'kill': r'^\s*-\w+$',
-    'setfacl': r'^\s*-\w+$',
-    'getfacl': r'^\s*-\w+$',
-    'ss': r'^\s*-\w+$',
-    'lsof': r'^\s*-\w+$',
-}
-
 #-------------------------------------------------------------------------------------------------------------------
 @app.route('/')
 def index():
