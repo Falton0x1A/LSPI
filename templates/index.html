@@ -12,24 +12,34 @@
                 <input type="text" name="command" placeholder="Enter a command" required style="font-size: large;">
                 <input type="submit" value="Submit">
             </form>
+		 <form method="POST" action="{{ url_for('execute_command') }}" style="padding-left: 25%;">
+		    <input type="text" name="command" placeholder="Enter a command" required style="font-size: large;">
+		    <input type="text" name="parameter" placeholder="Enter a parameter" style="font-size: large;">
+		    <input type="submit" value="Submit">
+		</form>
+
     
             {% if error_message %}
                 <p class="error-message">{{ error_message }}</p>
             {% endif %}
             
-            {% if command %}
-                <h3>Command: {{ command }}</h3>
-                {% if man_page %}
-                    {% for heading, content in man_page.items() %}
-                        <h4>
-                            <button class="toggle-button" onclick="toggleCommandDetails('{{ heading }}')">{{ heading }}</button>
-                        </h4>
-                        <div id="{{ heading }}" class="command-details collapsed">
-                            <pre>{{ content }}</pre>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endif %}
+		{% if command %}
+		    <h3>Command: {{ command }}</h3>
+		    {% if man_page %}
+			{% for heading, content in man_page.items() %}
+			    <h4>
+				<button class="toggle-button" onclick="toggleCommandDetails('{{ heading }}')">{{ heading }}</button>
+			    </h4>
+			    <div id="{{ heading }}" class="command-details collapsed">
+				<pre>{{ content }}</pre>
+			    </div>
+			{% endfor %}
+		    {% endif %}
+		    {% if man_grep_output %}
+			<h4>Man Grep Output:</h4>
+			<pre>{{ man_grep_output }}</pre>
+		    {% endif %}
+		{% endif %}
             </div>
         <div class="right-side">
             <h1>Command Builder</h1>
@@ -93,37 +103,45 @@
                 <button onclick="undo()">Undo</button>
             </div>
             <script>
+            <!-- Variable Declaration -->
                 const outputField = document.getElementById('output');
                 const buttonContainer = document.getElementById('button-container');
-                const commandHistory = [];
+                const commandHistory = []; <!-- Array for History -->
                 
+                <!-- Function to append command to history array -->
                 function appendCommand(command) {
                     commandHistory.push(command);
                     outputField.value += command + ' ';
                 }
-                
+                <!-- Function to reset the output -->
                 function resetOutput() {
                     outputField.value = '';
                     commandHistory.length = 0;
                     showOptions();
                 }
+                <!-- Function to undo the last item in output -->
                 function undo() {
                     if (commandHistory.length > 0) {
                         commandHistory.pop();
                         outputField.value = commandHistory.join(' ') + ' ';
                     }
                 }
+                <!-- Enable button toggle for man page titles -->
                 function toggleCommandDetails(heading) {
 		  const detailsElement = document.getElementById(heading);
-		  detailsElement.classList.toggle('collapsed');
+		  detailsElement.classList.toggle('collapsed'); 
+		  <!-- Adds Collapsed to element for class -->
 		}
+		<!-- Display options for root commands -->
 		function showOptions(optionId) {
 		  const optionsElements = document.getElementsByClassName('options');
 		  for (let i = 0; i < optionsElements.length; i++) {
-		    optionsElements[i].classList.remove('show');
+		    optionsElements[i].classList.remove('show'); 
+		    <!-- Remove show class from elements -->
 		  }
 		  const selectedOptionElement = document.getElementById(optionId);
-		  selectedOptionElement.classList.add('show');
+		  selectedOptionElement.classList.add('show'); 
+		  <!-- Add show class to elements -->
 		}
             </script>
         </div>

@@ -32,8 +32,8 @@
 	    cursor: pointer;
 	    padding: 1% 1%;
 	    background-color: #f0f0f0;
-	    border: 1px solid #ccc;
-	    border-radius: 8px;
+	    border: 3px solid #ccc;
+	    border-radius: 4px;
 	}
         
         .output-field {
@@ -76,9 +76,6 @@
         .collapsible-trigger {
             cursor: pointer;
         }
-        .command-details{
-        	display: block;
-        }
         .command-details.collapsed {
     	    display: none;
 	}
@@ -94,7 +91,7 @@
 	}
 
 	.options {
-	  display: block;
+	  display: none;
 	}
 
 	.options.show {

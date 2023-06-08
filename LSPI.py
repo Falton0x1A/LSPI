@@ -2,8 +2,8 @@ import subprocess
 import re
 from flask import Flask, render_template, request
 
-app = Flask(__name__, static_folder='static')
-
+app = Flask(__name__)
+app.debug = True
 # Define the allowed commands and their corresponding parameter patterns
 allowed_commands = {
     'chmod': r'^chmod(\s+-\w+)*$',
@@ -18,16 +18,6 @@ allowed_commands = {
     'getfacl': r'^getfacl(\s+-\w+)*$',
     'ss': r'^ss(\s+-\w+)*$',
     'lsof': r'^lsof(\s+-\w+)*$',
-    'rm' : r'^rm(\s+-\w+)*$',
-    'cat': r'^cat(\s+-\w+)*$',
-    'clear': r'^clear(\s+-\w+)*$',
-    'grep': r'^grep(\s+-\w+)*$',
-    'gzip': r'^gzip(\s+-\w+)*$',
-    'ssh': r'^ssh(\s+-\w+)*$',
-    'ls': r'^ls(\s+-\w+)*$',
-    'cd': r'^cd(\s+-\w+)*$',
-    'chown': r'^chown(\s+-\w+)*$',
-    'xxd': r'^xxd(\s+-\w+)*$'
 }
 #-------------------------------------------------------------------------------------------------------------------
 @app.route('/')
@@ -67,6 +57,33 @@ def interpret():
     man_page = {heading: content[i] for i, heading in enumerate(headings)}
 
     return render_template('index.html', command=command, man_page=man_page)
+#-------------------------------------------------------------------------------------------------------------------
+@app.route('/execute', methods=['POST'])
+def execute_command():
+    command = request.form['command']
+    parameter = request.form['parameter']
+    print(f"Command received: {command} {parameter}")  # Debugging purposes
+
+    try:
+        command_with_parameter = f"man {command} | grep .{parameter},"
+        # Making the command to execute
+        output = subprocess.check_output(command_with_parameter, shell=True).decode('utf-8')
+        # shell = true required for pipe (|) command
+
+        return render_template('index.html', command=command_with_parameter, man_grep_output=output, man_page=None)
+        # Man_page = none required to not display the man page before the new output
+    except subprocess.CalledProcessError as e:
+        # Handle errors when the command is not found
+        error_output = e.output.decode('utf-8')
+        if 'No manual entry' in error_output:
+            error_message = f"No manual entry for '{command}'"
+            return render_template('index.html', error_message=error_message)
+        else:
+            error_message = "An error occurred while executing the command"
+            return render_template('index.html', error_message=error_message)
+        
+    # Handle other error cases if needed
+    return render_template('index.html', command=command, man_grep_output=None, man_page=None)
 #-------------------------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
     app.run()
